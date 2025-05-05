@@ -10,7 +10,7 @@ export const getUserProfile = async (req, res) => {
     const user = await User.findOne({ username }).select("-password");
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     res.status(200).json(user);
@@ -29,11 +29,11 @@ export const followUnfollowUser = async (req, res) => {
     if (id === req.user._id.toString()) {
       return res
         .status(400)
-        .json({ message: "You cannot follow/unfollow yourself" });
+        .json({ error: "You cannot follow/unfollow yourself" });
     }
 
     if (!userToModify || !currentUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const isFollowing = currentUser.following.includes(id);
@@ -47,7 +47,7 @@ export const followUnfollowUser = async (req, res) => {
         $pull: { following: id },
       });
 
-      res.status(200).json({ message: "Unfollowed successfully" });
+      res.status(200).json({ error: "Unfollowed successfully" });
     } else {
       //follow the user
       await User.findByIdAndUpdate(id, {
@@ -115,7 +115,7 @@ export const updateUser = async (req, res) => {
     let user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     if (
@@ -123,7 +123,7 @@ export const updateUser = async (req, res) => {
       (!currentPassword && newPassword)
     ) {
       return res.status(400).json({
-        message: "Please provide both current password and new password",
+        error: "Please provide both current password and new password",
       });
     }
 
@@ -131,13 +131,13 @@ export const updateUser = async (req, res) => {
       const isMatch = await bcryptjs.compare(currentPassword, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ message: "Invalid current password" });
+        return res.status(400).json({ error: "Invalid current password" });
       }
 
       if (newPassword.length < 6) {
         return res
           .status(400)
-          .json({ message: "New password must be at least 6 characters long" });
+          .json({ error: "New password must be at least 6 characters long" });
       }
 
       const salt = await bcryptjs.genSalt(10);

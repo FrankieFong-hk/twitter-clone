@@ -8,23 +8,23 @@ export const signup = async (req, res) => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res.status(400).json({ error: "Invalid email format" });
     }
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "Username already exists" });
+      return res.status(400).json({ error: "Username already exists" });
     }
 
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ error: "Email already exists" });
     }
 
     if (password.length < 6) {
       return res
         .status(400)
-        .json({ message: "Password must be at least 6 characters long" });
+        .json({ error: "Password must be at least 6 characters long" });
     }
 
     // hash password
@@ -53,11 +53,11 @@ export const signup = async (req, res) => {
         profileImg: newUser.profileImg,
       });
     } else {
-      return res.status(400).json({ message: "User creation failed" });
+      return res.status(400).json({ error: "User creation failed" });
     }
   } catch (error) {
     console.log("Error in signup controller", error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -72,7 +72,7 @@ export const login = async (req, res) => {
     );
 
     if (!user || !isPasswordCorrect) {
-      return res.status(401).json({ message: "Invalid username or password" });
+      return res.status(401).json({ error: "Invalid username or password" });
     }
 
     generateTokenAndSetCookie(user._id, res);
@@ -88,7 +88,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in login controller", error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -101,7 +101,7 @@ export const logout = async (req, res) => {
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -111,6 +111,6 @@ export const getMe = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     console.log("Error in getMe controller", error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
