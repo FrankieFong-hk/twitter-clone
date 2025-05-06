@@ -5,7 +5,7 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
@@ -39,7 +39,9 @@ const Sidebar = () => {
     },
   });
 
-  const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+  // Use queryClient to directly access the cached authUser data
+  const authUser = queryClient.getQueryData(["authUser"]);
+
 
   const handleLogout = (e) => {
     e.preventDefault();
