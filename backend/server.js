@@ -20,8 +20,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json()); // to parse req.body
-app.use(express.urlencoded({ extended: true })); // to parse form data(urlencoded)
+app.use(express.json({ limit: "50mb" })); // to parse req.body with increased size limit
+app.use(express.urlencoded({ extended: true, limit: "50mb" })); // to parse form data with increased size limit
 
 app.use(cookieParser());
 
