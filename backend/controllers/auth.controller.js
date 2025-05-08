@@ -68,7 +68,7 @@ export const login = async (req, res) => {
     const user = await User.findOne({ username });
     const isPasswordCorrect = await bcryptjs.compare(
       password,
-      user.password || ""
+      user?.password || ""
     );
 
     if (!user || !isPasswordCorrect) {
